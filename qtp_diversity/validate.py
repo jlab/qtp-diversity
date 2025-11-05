@@ -155,7 +155,6 @@ def validate(qclient, job_id, parameters, out_dir):
     """
     prep_id = parameters.get('template')
     analysis_id = parameters.get('analysis')
-    files = loads(parameters['files'])
     a_type = parameters['artifact_type']
 
     validators = {'distance_matrix': _validate_distance_matrix,
@@ -180,11 +179,15 @@ def validate(qclient, job_id, parameters, out_dir):
         return (False, None, "Missing metadata information")
 
     # Validate the specific type
+    files = {k: [qclient.fetch_file_from_central(vv) for vv in v]
+             for k, v in loads(parameters['files']).items()}
     success, ainfo, error_msg = validators[a_type](files, metadata, out_dir)
 
     if success:
         # Generate the summary in the validator to save GUI clicks
         html_fp, html_dir = HTML_SUMMARIZERS[a_type](files, metadata, out_dir)
+        qclient.push_file_to_central(html_fp)
+        qclient.push_file_to_central(html_dir)
         # Magic number 0, there is only 1 ArtifactInfo on the list
         ainfo[0].files.append((html_fp, 'html_summary'))
         if html_dir is not None:
