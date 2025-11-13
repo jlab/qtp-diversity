@@ -1,4 +1,4 @@
-Diversity Qiita type Plugin 
+Diversity Qiita type Plugin
 ===========================
 
 Qiita (canonically pronounced *cheetah*) is an analysis environment for microbiome (and other "comparative -omics") datasets.
