@@ -263,14 +263,16 @@ def generate_html_summary(qclient, job_id, parameters, out_dir):
     else:
         return (False, None, "Missing metadata information")
 
-    files = {k: [vv['filepath'] for vv in v]
+    files = {k: [qclient.fetch_file_from_central(vv['filepath']) for vv in v]
              for k, v in artifact_info['files'].items()}
     try:
         html_fp, html_dir = HTML_SUMMARIZERS[atype](files, metadata, out_dir)
     except Exception as e:
         return False, None, str(e)
 
+    qclient.push_file_to_central(html_fp)
     if html_dir:
+        qclient.push_file_to_central(html_dir)
         patch_val = dumps({'html': html_fp, 'dir': html_dir})
     else:
         patch_val = html_fp
