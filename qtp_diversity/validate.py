@@ -187,10 +187,10 @@ def validate(qclient, job_id, parameters, out_dir):
         # Generate the summary in the validator to save GUI clicks
         html_fp, html_dir = HTML_SUMMARIZERS[a_type](files, metadata, out_dir)
         qclient.push_file_to_central(html_fp)
-        qclient.push_file_to_central(html_dir)
         # Magic number 0, there is only 1 ArtifactInfo on the list
         ainfo[0].files.append((html_fp, 'html_summary'))
         if html_dir is not None:
+            qclient.push_file_to_central(html_dir)
             ainfo[0].files.append((html_dir, 'html_summary_dir'))
 
     return success, ainfo, error_msg
