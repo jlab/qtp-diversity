@@ -155,6 +155,7 @@ def validate(qclient, job_id, parameters, out_dir):
     """
     prep_id = parameters.get('template')
     analysis_id = parameters.get('analysis')
+    files = loads(parameters['files'])
     a_type = parameters['artifact_type']
 
     validators = {'distance_matrix': _validate_distance_matrix,
@@ -179,8 +180,6 @@ def validate(qclient, job_id, parameters, out_dir):
         return (False, None, "Missing metadata information")
 
     # Validate the specific type
-    files = {k: [qclient.fetch_file_from_central(vv) for vv in v]
-             for k, v in loads(parameters['files']).items()}
     success, ainfo, error_msg = validators[a_type](files, metadata, out_dir)
 
     if success:
