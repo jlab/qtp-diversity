@@ -179,7 +179,7 @@ def validate(qclient, job_id, parameters, out_dir):
         return (False, None, "Missing metadata information")
 
     # Validate the specific type
-    files = {k: [qclient.fetch_file_from_central(vv) for vv in v]
+    files = {k: [vv for vv in v]
              for k, v in loads(parameters['files']).items()}
     success, ainfo, error_msg = validators[a_type](files, metadata, out_dir)
 
